@@ -1,0 +1,21 @@
+.slider-outer {
+        width: 13%;
+        padding: 30px;
+        display: inline-block;
+        border-left: 10px solid black;
+}
+
+h2 {
+        font-size: 0.7vw;
+        font-family: 'Oswald', sans-serif;
+        font-weight: 400;
+        text-align: center;
+}
+
+.slider {
+        margin-left: 20px;
+        width: 50%;
+        border-radius: 5px;
+        size: 1vw
+}
+
