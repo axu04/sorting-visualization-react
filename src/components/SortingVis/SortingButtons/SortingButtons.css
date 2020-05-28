@@ -15,7 +15,7 @@
         text-align: center;
         transition: all 0.15s;
         background-color: pink;
-        font-size: .7vw;
+        font-size: 1vw;
 }
 
 button:hover {

@@ -14,7 +14,7 @@ export default class Slider extends React.Component {
                                                 type='range'
                                                 className='slider'
                                                 min='1'
-                                                max='10'
+                                                max='11'
                                                 value={this.props.value}
                                                 disabled={this.props.sliderDisabled}>
                                         </input>

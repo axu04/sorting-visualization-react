@@ -8,7 +8,7 @@ import { bubbleSortAnimations,
 import Slider from './Slider/Slider'
 import './SortingButtons.css'
 
-const MAX_SPEED = 11
+const MAX_SPEED = 12
 const CHECK_COLOR = 'red'
 const BAR_COLOR = 'pink'
 
@@ -22,7 +22,7 @@ export default class SortingButtons extends React.Component {
 
                 this.state = {
                         disabled: false,
-                        sortingSpeed: 5,
+                        sortingSpeed: 6,
                         sliderDisabled: false
                 }
                 this.heapSort = this.heapSort.bind(this)
