@@ -113,7 +113,7 @@ export default class SortingButtons extends React.Component {
         //Does: clears all unfinished animations, clears all timeouts, 
         //      and re-enables all buttons/sliders 
         resetArray() {
-                this.animation = []
+                // this.animation = []
                 let bars = document.getElementsByClassName('singleBar')
                 for (let i = 0; i < bars.length; i++) {
                         bars[i].style.backgroundColor = `rgba(${ this.props.barColor.r }, 
@@ -124,6 +124,8 @@ export default class SortingButtons extends React.Component {
                 for (let i = 0; i < this.timeoutAnimation.length; i++) {
                         clearTimeout(this.timeoutAnimation[i])
                 }
+                this.timeoutAnimation = []
+                
                 this.setState({disabled: false})
                 this.setState({sliderDisabled: false})
                 this.setState({colorPickDisabled: false})
