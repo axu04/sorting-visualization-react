@@ -50,7 +50,7 @@ export default class SortingVis extends React.Component {
         generateNewArray() {
                 const array = [];
                 for (let i = 0; i < NUM_ARRAY_BARS; i++) {
-                        array.push(generateRandomNumber(SCREEN_HEIGHT*0.05, SCREEN_HEIGHT*0.8))
+                        array.push(generateRandomNumber(SCREEN_HEIGHT*0.05, SCREEN_HEIGHT*0.80))
                 }
                 this.setState({array: array})
         }
@@ -80,7 +80,7 @@ export default class SortingVis extends React.Component {
                                     well as a speed slider and color selector */}
                                         <SortingButtons 
                                                 reset={this.generateNewArray} 
-                                                stateArray={this.state.array}
+                                                stateArray={finalArray}
                                                 barColor={this.state.primaryColor}
                                                 secondColor={this.state.secondaryColor}
                                                 changeColor={this.changeColor}/>
@@ -95,11 +95,12 @@ export default class SortingVis extends React.Component {
                                                         style = {{ 
                                                                 backgroundColor: barColor,
                                                                 height: `${number}px`
-                                                        }}>
+                                                }}>
                                                 </div>
                                         ))}
-                                </div>
                         </div>
+                        </div>
+                        
                 )
         }
 }

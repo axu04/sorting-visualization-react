@@ -1,29 +1,41 @@
+//SortingAlgorithms.js
+
+//bubbleSortAnimations function
+//Parameters: input - array storing all values
+//Returns: array containing a list of animations
+//Does: Performs a bubble sort and adds required swap and color animations
+//      to an array to visualize
 export function bubbleSortAnimations(input) {
         let bubbleAnimation = []
-        let length = input.length
-        let isSwapped
+        let length = input.length;
+        let isSwapped;
         do {
                 isSwapped = false;
                 for (let i = 0; i < length-1; i++) {
                         if (input[i] > input[i + 1]) { 
-                                //Pushes indices to bubbleAnimation to change the color indicating 
-                                //the bars are being checked 
-                                bubbleAnimation.push([i, i+1, 'color', 'change'])
-                                //Pushes indices to bubbleAnimation to revert the color 
-                                bubbleAnimation.push([i, i+1, 'color', 'revert'])  
-                                //Pushes indices to bubbleAnimation to change the height of 
-                                //the array bars
-                                bubbleAnimation.push([i, i+1, 'height'])
-                                let temp = input[i]
-                                input[i] = input[i + 1]
-                                input[i + 1] = temp
-                                isSwapped = true
+
+                                //push indices to change colors
+                                bubbleAnimation.push([i, i+1, 'color', 'change']);
+                                bubbleAnimation.push([i, i+1, 'color', 'revert']);   
+                                //push indices to swap bars 
+                                bubbleAnimation.push([i, input[i+1], 'height'])
+                                bubbleAnimation.push([i+1, input[i], 'height'])
+                                
+                                let temp = input[i];
+                                input[i] = input[i + 1];
+                                input[i + 1] = temp;
+                                isSwapped = true;
                         }
                 }
-        } while (isSwapped)
+        } while (isSwapped);
         return bubbleAnimation
 };
 
+//insertionSortAnimations function
+//Parameters: input - array storing all values
+//Returns: array containing a list of animations
+//Does: Performs an insertion sort and pushes required swap and color animations
+//      to the array to visualize
 export function insertionSortAnimations(input) {
         let insertionAnimation = []
         let length = input.length;
@@ -31,20 +43,27 @@ export function insertionSortAnimations(input) {
                 let value = input[i];
                 let j = i - 1;
                 while (j >= 0 && input[j] > value) {
-                        //Pushes indices to insertionAnimation to change the color
+                        //push indices to swap colors
                         insertionAnimation.push([j, j+1, 'color', 'change']);
-                        //Pushes indices to insertionAnimation to revert the color
                         insertionAnimation.push([j, j+1, 'color', 'revert']);
-                        //Pushes indices to insertionAnimation to swap array bars
-                        insertionAnimation.push([j, j+1, 'height']);
+                        //push indices to swap bars
+                        insertionAnimation.push([j+1, j, 'barSwap'])
+                        insertionAnimation.push([j+1, input[j], 'height']);
+                        
                         input[j + 1] = input[j];
                         j--;
                 }
+                insertionAnimation.push([j+1, value, 'height'])
                 input[j + 1] = value;
         }
         return insertionAnimation
 }
 
+//heapSortAnimation function
+//Parameters: input - array storing all values
+//Returns: array containing a list of animations
+//Does: Performs a heap sort and pushes required swap and color animations 
+//      to the array to visualize
 export function heapSortAnimations(input) {
         let heapAnimation = []
         for (let i = Math.floor(input.length / 2 - 1); i >= 0; i--) {
@@ -59,8 +78,13 @@ export function heapSortAnimations(input) {
 }
 
 //heapify function
-//Does: Creates and maintains the heap. Also pushes animations to the 
-//      heapAnimation array when necessary
+//Parameters: input - array of all values
+//            size - the size of the array being motified
+//            i - parent element of the 'nodes' being checked
+//            heapAnimation - array storing all animations
+//Returns: Nothing
+//Does: Ensures shape and heap invariants and performs a upheap 
+//      if necessary
 function heapify(input, size, i, heapAnimation) {
         let max = i;
         let left = 2 * i + 1;
@@ -71,10 +95,8 @@ function heapify(input, size, i, heapAnimation) {
         if (right < size && input[right] > input[max]) {
                 max = right;
         }
-
-        //Pushes indices to the heapAnimation array to change color
+        //push indices to swap colors
         heapAnimation.push([i, max, 'color', 'change']);
-        //Pushes indices to the heapAniamtion array to revert color 
         heapAnimation.push([i, max, 'color', 'revert']);
 
         if (max !== i) {
@@ -84,17 +106,26 @@ function heapify(input, size, i, heapAnimation) {
 }
 
 //heapSwap function
-//Does: Swaps the values stored at the given indices in the input 
-//      array
+//Parameters: input - the array of all values
+//            first - first index being swapped
+//            second - second index being swapped
+//            heapAniamtion - array storing all animations
+//Returns: Nothing
+//Does: Swaps the values contained at the indices passed in and
+//      pushes required animation to the heapAnimation array
 function heapSwap(input, first, second, heapAnimation) {
-        //Pushes indices to the heapAnimation array to swap array bars 
+        //push indices to swap bars 
         heapAnimation.push([first, second, 'height']);
         let temp = input[first];
         input[first] = input[second];
         input[second] = temp;
 }
 
-
+//mergeSortAnimations functions
+//Parameters: array - array of all values
+//Returns: array containing all animations
+//Does: Performs a merge sort and pushes required swap and color animations
+//      to the array to visualize
 export function mergeSortAnimations(array) {
         let tempArray = Array.from(array);
         let mergeAnimation = []
@@ -102,8 +133,14 @@ export function mergeSortAnimations(array) {
         return mergeAnimation
 }
 
-//mergeSortRecur function
-//Does: Recursive merge sort helper function
+//mergeSortHelper function
+//Parameters: input - array of all values
+//            startIndex - beginning index of the array being searched
+//            endIndex - end index of array being searched
+//            tempArray - second copy of array 
+//            mergeAnimation - array containing all animations for merge sort
+//Returns: Nothing
+//Does: Recursively calls in order to get to the 'smallest' section of the array
 function mergeSortHelper(input, startIndex, endIndex, tempArray, mergeAnimation) {
         if (startIndex === endIndex) {
                 return;
@@ -115,62 +152,72 @@ function mergeSortHelper(input, startIndex, endIndex, tempArray, mergeAnimation)
 }
 
 //mergeSortHelp function
-//Does: Performs an iterative merge sort on a portion of the array and 
-//      pushes animations to the mergeAnimations array
+//Parameters: input - array of all values
+//            startIndex - beginning index of the array being searched
+//            endIndex - end index of array being searched
+//            middleIndex - the middle of the indices passed in 
+//            tempArray - second copy of array
+//            mergeAnimation - array containing all animations for a merge sort
+//Returns: Nothing 
+//Does: Performs the swapping of the merge sort and pushes all animations to the
+//      mergeAnimation array
 function mergeSortHelp(input, startIndex, middleIndex, endIndex, tempArray, mergeAnimation) {
         let x = startIndex, y = startIndex, z = middleIndex + 1;
         while (y <= middleIndex && z <= endIndex) {
-                //Pushes indices to the mergeAnimation array to change color
+                //push indices to swap colors
                 mergeAnimation.push([y, z, 'color', 'change']);
-                //Pushes indices to the mergeAnimation array to revert color
                 mergeAnimation.push([y, z, 'color', 'revert']);
                 if (tempArray[y] <= tempArray[z]) {
-                        //Pushes indices to the mergeAnimation array to swap array bars 
+                        //push indices to swap array bars
                         mergeAnimation.push([x, tempArray[y], 'height']);
                         input[x++] = tempArray[y++];
                 } else {
-                        //Pushes indices to the mergeAnimation array to swap array bars 
+                        //push indices to swap array bars
                         mergeAnimation.push([x, tempArray[z], 'height']);
                         input[x++] = tempArray[z++];
                 }
         }
         while (y <= middleIndex) {
-                //Pushes indices to the mergeAnimation array to change color
+                //push indices to swap colors
                 mergeAnimation.push([y, y, 'color', 'change']);
-                //Pushes indices to the mergeAnimation array to revert color
                 mergeAnimation.push([y, y, 'color', 'revert']);
-                //Pushes indices to the mergeAnimation array to swap array bars 
+                //push indices to swap array bars
                 mergeAnimation.push([x, tempArray[y], 'height']);
                 input[x++] = tempArray[y++];
         }
         while (z <= endIndex) {
-                //Pushes indices to the mergeAnimation array to change color
+                //push indices to swap colors
                 mergeAnimation.push([z, z, 'color', 'change']);
-                //Pushes indices to the mergeAnimation array to revert color
                 mergeAnimation.push([z, z, 'color', 'revert']);
-                //Pushes indices to the mergeAnimation array to swap array bars 
+                //push indices to swap array bars
                 mergeAnimation.push([x, tempArray[z], 'height']);
                 input[x++] = tempArray[z++];
         }
 }
 
+//selectionSortAnimation function
+//Parameters: input - array of all values
+//Returns: array of all animations
+//Does: Performs a selection sort and pushes required swap and color animations
+//      to the array in order to visualize
 export function selectionSortAnimations(input) {
         let selectionAnimation = []
         let length = input.length;
         for (let i = 0; i < length; i++) {
                 let minimum = i;
                 for (let j = i + 1; j < length; j++) {
-                        //Pushes indices to the selectionAnimation array to change colors
+                        //push indices to swap colors
                         selectionAnimation.push([j, minimum, 'color', 'change']);
-                        //Pushes indices to the selectionAnimation array to revert colors
                         selectionAnimation.push([j, minimum, 'color', 'revert']);
                         if (input[minimum] > input[j]) {
                                 minimum = j;
                         }
                 }
                 if (minimum !== i) {
-                        //Pushes indices to the selectionAnimation array to swap array bars
-                        selectionAnimation.push([i, minimum, 'height']);
+                        //push indices to swap array bars
+                        selectionAnimation.push([i, input[minimum], 'height']);
+                        selectionAnimation.push([minimum, input[i], 'height']);
+
                         let temp = input[i];
                         input[i] = input[minimum];
                         input[minimum] = temp;

@@ -23,6 +23,8 @@ export default class SortingButtons extends React.Component {
                 this.animation = []
                 //timeout array
                 this.timeoutAnimation = [];
+                //array of div tags 
+                this.bars = document.getElementsByClassName('singleBar')
 
                 //initial values of this class' state
                 this.state = {
@@ -49,51 +51,9 @@ export default class SortingButtons extends React.Component {
         //Returns: Nothing
         //Does: Performs and visualizes a bubble sort 
         bubbleSort(array) {
+                this.disableButtons()
                 this.animation = bubbleSortAnimations(array)
                 let bars = document.getElementsByClassName('singleBar')
-                this.animationSwap(this.animation, bars)
-        }
-
-        //heapSort function
-        //Parameters: array - array of un-sorted values
-        //Returns: Nothing
-        //Does: Performs and visualizes a heap sort
-        heapSort(array) {
-                this.animation = heapSortAnimations(array);
-                let bars = document.getElementsByClassName('singleBar')
-                this.animationSwap(this.animation, bars)
-        }
-
-        //insertionSort function
-        //Parameters: array - array of un-sorted values
-        //Returns: Nothing
-        //Does: Performs and visualizes an insertion sort
-        insertionSort(array) {
-                this.animation = insertionSortAnimations(array);
-                let bars = document.getElementsByClassName('singleBar')
-                this.animationSwap(this.animation, bars)
-        }
-
-        //selectionSort function
-        //Parameters: array - array of un-sorted values
-        //Returns: Nothing 
-        //Does: Performs and visualizes a selection sort
-        selectionSort(array) {
-                this.animation = selectionSortAnimations(array);
-                let bars = document.getElementsByClassName('singleBar')
-                this.animationSwap(this.animation, bars)
-        }
-
-        //mergeSort function
-        //Parameters: array - array of un-sorted values
-        //Returns: Nothing
-        //Does: Performs and visualizes a merge sort 
-        mergeSort(array) {
-                this.setState({disabled: true})
-                this.setState({sliderDisabled: true})
-                this.setState({colorPickDisabled: true})
-                let bars = document.getElementsByClassName('singleBar')
-                this.animation = mergeSortAnimations(array)
                 for (let i = 0; i < this.animation.length; i++) {
                         let [firstIndex, secondIndex, typeChange, instruction] = this.animation[i];
                         if (typeChange === 'color') {
@@ -101,7 +61,90 @@ export default class SortingButtons extends React.Component {
                         } else {
                                 this.timeoutAnimation.push(setTimeout( () => {
                                         const [index, heightVal] = this.animation[i];
-                                        bars[index].style.height = heightVal + 'px';
+                                        bars[index].style.height = `${heightVal}px`;
+                                }, i*(MAX_SPEED-this.state.sortingSpeed)));
+                        }
+                }
+        }
+
+        //heapSort function
+        //Parameters: array - array of un-sorted values
+        //Returns: Nothing
+        //Does: Performs and visualizes a heap sort
+        heapSort(array) {
+                this.disableButtons()
+                this.animation = heapSortAnimations(array);
+                let bars = document.getElementsByClassName('singleBar')
+                for (let i = 0; i < this.animation.length; i++) {
+                        let [firstIndex, secondIndex, typeChange, instruction] = this.animation[i];
+                        if (typeChange === 'color') {
+                                this.colorSwap(firstIndex, secondIndex, instruction, bars, i);
+                        } else {
+                                this.barSwap(firstIndex, secondIndex, bars, i);
+                        }
+                }
+        }
+
+        //insertionSort function
+        //Parameters: array - array of un-sorted values
+        //Returns: Nothing
+        //Does: Performs and visualizes an insertion sort
+        insertionSort(array) {
+                this.disableButtons()
+                this.animation = insertionSortAnimations(array);
+                let bars = document.getElementsByClassName('singleBar')
+                for (let i = 0; i < this.animation.length; i++) {
+                        let [firstIndex, secondIndex, typeChange, instruction] = this.animation[i];
+                        if (typeChange === 'color') {
+                                this.colorSwap(firstIndex, secondIndex, instruction, bars, i);
+                        } else if (typeChange === 'height') {
+                                this.timeoutAnimation.push(setTimeout( () => {
+                                        const [index, heightVal] = this.animation[i];
+                                        bars[index].style.height = `${heightVal}px`;
+                                }, i*(MAX_SPEED-this.state.sortingSpeed)));
+                        } else {
+                                this.barSwap(firstIndex, secondIndex, bars, i);
+                        }
+                }
+        }
+
+        //selectionSort function
+        //Parameters: array - array of un-sorted values
+        //Returns: Nothing 
+        //Does: Performs and visualizes a selection sort
+        selectionSort(array) {
+                this.disableButtons()
+                this.animation = selectionSortAnimations(array);
+                let bars = document.getElementsByClassName('singleBar')
+                for (let i = 0; i < this.animation.length; i++) {
+                        let [firstIndex, secondIndex, typeChange, instruction] = this.animation[i];
+                        if (typeChange === 'color') {
+                                this.colorSwap(firstIndex, secondIndex, instruction, bars, i);
+                        } else {
+                                this.timeoutAnimation.push(setTimeout( () => {
+                                        const [index, heightVal] = this.animation[i];
+                                        bars[index].style.height = `${heightVal}px`;
+                                }, i*(MAX_SPEED-this.state.sortingSpeed)));
+                        }
+                }
+        }
+
+        //mergeSort function
+        //Parameters: array - array of un-sorted values
+        //Returns: Nothing
+        //Does: Performs and visualizes a merge sort 
+        mergeSort(array) {
+                this.disableButtons()
+                this.animation = mergeSortAnimations(array)
+                let bars = document.getElementsByClassName('singleBar')
+                for (let i = 0; i < this.animation.length-1; i++) {
+                        let [firstIndex, secondIndex, typeChange, instruction] = this.animation[i];
+                        if (typeChange === 'color') {
+                                this.colorSwap(firstIndex, secondIndex, instruction, bars, i);
+                        } else {
+                                this.timeoutAnimation.push(setTimeout( () => {
+                                        const [index, heightVal] = this.animation[i];
+                                        bars[index].style.height = `${heightVal}px`;
                                 }, i*(MAX_SPEED-this.state.sortingSpeed)));
                         } 
                 }
@@ -113,7 +156,7 @@ export default class SortingButtons extends React.Component {
         //Does: clears all unfinished animations, clears all timeouts, 
         //      and re-enables all buttons/sliders 
         resetArray() {
-                // this.animation = []
+                this.animation = []
                 let bars = document.getElementsByClassName('singleBar')
                 for (let i = 0; i < bars.length; i++) {
                         bars[i].style.backgroundColor = `rgba(${ this.props.barColor.r }, 
@@ -125,43 +168,10 @@ export default class SortingButtons extends React.Component {
                         clearTimeout(this.timeoutAnimation[i])
                 }
                 this.timeoutAnimation = []
-                
+
                 this.setState({disabled: false})
                 this.setState({sliderDisabled: false})
                 this.setState({colorPickDisabled: false})
-        }
-
-        //animationSwap function
-        //Parameters: array - array of un-sorted values 
-        //            bars - array of div tags corresponding to each array value
-        //Returns: Nothing
-        //Does: disables all buttons and the slider, and loops through 
-        //      array and gets animation data
-        animationSwap(array, bars) {
-                this.setState({disabled: true})
-                this.setState({sliderDisabled: true})
-                this.setState({colorPickDisabled: true})
-                for (let i = 0; i < array.length; i++) {
-                        let [firstIndex, secondIndex, typeChange, instruction] = array[i];
-                        this.typeCheck(firstIndex, secondIndex, typeChange, instruction, bars, i);
-                }
-        }
-
-        //typeCheck function
-        //Parameters: firstIndex - first index being swapped
-        //            secondIndex - second index being swapped
-        //            typeChange - type of swap being performed (color/height swap)
-        //            instruction - 'direction' of change (change/revert)
-        //            bars - array of div tags corresponding to each array value
-        //            i - the current index in the main for loop 
-        //Returns: Nothig
-        //Does: Checks and performs the correct swap in the animation array
-        typeCheck(firstIndex, secondIndex, typeChange, instruction, bars, i) {
-                if (typeChange === 'color') {
-                        this.colorSwap(firstIndex, secondIndex, instruction, bars, i);
-                } else {
-                        this.barSwap(firstIndex, secondIndex, bars, i);
-                } 
         }
         
         //barSwap function
@@ -208,6 +218,16 @@ export default class SortingButtons extends React.Component {
                 }, i*(MAX_SPEED-this.state.sortingSpeed)));
         }
 
+        //disableButtons function
+        //Parameters: Nothing
+        //Returns: Nothing
+        //Does: Disables buttons/slider/color picker when sorting animation is going
+        disableButtons() {
+                this.setState({disabled: true})
+                this.setState({sliderDisabled: true})
+                this.setState({colorPickDisabled: true})
+        }
+
         //changeBarColor function
         //Parameters: Nothing
         //Returns: Nothing
@@ -235,6 +255,7 @@ export default class SortingButtons extends React.Component {
         }
         
         render() {
+                const array = this.props.stateArray
                 return (
                         <div className="sortingButtonsBar">
                                 {/* Buttons for each sorting algorithm as well as 
@@ -242,34 +263,34 @@ export default class SortingButtons extends React.Component {
                                 <button 
                                         className='sortingButtons'
                                         onClick={() => {
-                                                this.props.reset()
                                                 this.resetArray()
+                                                this.props.reset()
                                         }}
                                         >Create New Array 
                                 </button>
                                 <button 
                                         className='sortingButtons'
-                                        onClick={() => this.bubbleSort(this.props.stateArray)} 
+                                        onClick={() => this.bubbleSort(array)} 
                                         disabled={this.state.disabled}>Bubble Sort
                                 </button>
                                 <button 
                                         className='sortingButtons'
-                                        onClick={() => this.mergeSort(this.props.stateArray)}
+                                        onClick={() => this.mergeSort(array)}
                                         disabled={this.state.disabled}>Merge Sort
                                 </button>
                                 <button 
                                         className='sortingButtons'
-                                        onClick={() => this.insertionSort(this.props.stateArray)}
+                                        onClick={() => this.insertionSort(array)}
                                         disabled={this.state.disabled}>Insertion Sort
                                 </button>
                                 <button 
                                         className='sortingButtons'
-                                        onClick={() => this.heapSort(this.props.stateArray)}
+                                        onClick={() => this.heapSort(array)}
                                         disabled={this.state.disabled}>Heap Sort
                                 </button>
                                 <button 
                                         className='sortingButtons'
-                                        onClick={() => this.selectionSort(this.props.stateArray)}
+                                        onClick={() => this.selectionSort(array)}
                                         disabled={this.state.disabled}>Selection Sort
                                 </button>
                                 {/* Slider component that allows the user to select the speed of 
