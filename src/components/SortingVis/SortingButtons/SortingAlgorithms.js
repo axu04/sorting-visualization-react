@@ -1,4 +1,5 @@
 //SortingAlgorithms.js
+//File that contains functions for each sorting algorithm
 
 //bubbleSortAnimations function
 //Parameters: input - array storing all values
