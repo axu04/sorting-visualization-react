@@ -12,7 +12,7 @@ import Slider from './Slider/Slider'
 import './SortingButtons.css'
 
 //Maximum sorting speed
-const MAX_SPEED = 12
+const MAX_SPEED = 25
 
 export default class SortingButtons extends React.Component {
 
